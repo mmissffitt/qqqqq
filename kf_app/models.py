@@ -27,7 +27,7 @@ class MediaContent(models.Model):
     country = models.CharField("Страна производства", max_length=100)
     rating = models.FloatField("Рейтинг")
     age_restriction = models.PositiveIntegerField("Возрастное ограничение")
-    duration = models.PositiveIntegerField("Длительность")
+    duration = models.PositiveIntegerField("Длительность", null=True, blank=True)  # Изменение №3
     content_type = models.CharField("Тип", max_length=10, choices=CONTENT_TYPES)
     genres = models.ManyToManyField('Genre', verbose_name="Жанры")
 
@@ -43,6 +43,7 @@ class Review(models.Model):
     media_content = models.ForeignKey(MediaContent, verbose_name="Медиаконтент", on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField("Оценка")
     review_text = models.TextField("Текст отзыва")
+    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
 
     class Meta:
         verbose_name = "Отзыв"
@@ -54,9 +55,13 @@ class Review(models.Model):
             )
         ]
 
+    def __str__(self):  # Изменение №1
+        return f"Отзыв {self.user} на {self.media_content}"
+
 class Favorite(models.Model):
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
     media_content = models.ForeignKey(MediaContent, verbose_name="Медиаконтент", on_delete=models.CASCADE)
+    added_at = models.DateTimeField("Дата добавления", auto_now_add=True)
 
     class Meta:
         verbose_name = "Избранное"
@@ -68,9 +73,13 @@ class Favorite(models.Model):
             )
         ]
 
+    def __str__(self):  # Изменение №1
+        return f"{self.user} - {self.media_content}"
+
 class ViewHistory(models.Model):
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
-    media_content = models.ForeignKey(MediaContent, verbose_name="Медиаконтент", on_delete=models.CASCADE)
+    media_content = models.ForeignKey(MediaContent, verbose_name="Медиаконтент", on_delete=models.CASCADE, null=True, blank=True)
+    episode = models.ForeignKey('Episode', verbose_name="Эпизод", on_delete=models.CASCADE, null=True, blank=True)  # Изменение №2
     viewed_at = models.DateTimeField("Дата и время просмотра")
     viewed_seconds = models.PositiveIntegerField("Просмотрено секунд")
 
@@ -78,11 +87,22 @@ class ViewHistory(models.Model):
         verbose_name = "История просмотров"
         verbose_name_plural = "История просмотров"
 
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if not self.media_content and not self.episode:
+            raise ValidationError("Должен быть указан либо медиаконтент, либо эпизод")
+        if self.media_content and self.episode:
+            raise ValidationError("Можно указать только медиаконтент ИЛИ эпизод")
+
+    def __str__(self):  # Изменение №1
+        content = self.media_content if self.media_content else self.episode
+        return f"{self.user} - {content}"
+
 class Subscription(models.Model):
     tariff_plan = models.CharField("Тарифный план", max_length=100)
     description = models.TextField("Описание")
     price = models.DecimalField("Стоимость", max_digits=8, decimal_places=2)
-    duration = models.PositiveIntegerField("Длительность")
+    duration = models.PositiveIntegerField("Длительность (дней)")
 
     class Meta:
         verbose_name = "Подписка"
@@ -98,17 +118,28 @@ class UserSubscription(models.Model):
         ('CANCELED', 'Отменена'),
     ]
     
+    PAYMENT_METHODS = [  # Изменение №4
+        ('CARD', 'Банковская карта'),
+        ('PAYPAL', 'PayPal'),
+        ('APPLE_PAY', 'Apple Pay'),
+        ('GOOGLE_PAY', 'Google Pay'),
+        ('YANDEX_MONEY', 'Яндекс.Деньги'),
+    ]
+    
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
     subscription = models.ForeignKey(Subscription, verbose_name="Подписка", on_delete=models.CASCADE)
     status = models.CharField("Статус подписки", max_length=10, choices=STATUS_CHOICES)
     start_date = models.DateField("Дата начала")
     end_date = models.DateField("Дата окончания")
     auto_renewal = models.BooleanField("Автопродление", default=False)
-    payment_method = models.CharField("Способ оплаты", max_length=50)
+    payment_method = models.CharField("Способ оплаты", max_length=20, choices=PAYMENT_METHODS)  # Изменение №4
 
     class Meta:
         verbose_name = "Подписка пользователя"
         verbose_name_plural = "Подписки пользователей"
+
+    def __str__(self):  # Изменение №1
+        return f"{self.user} - {self.subscription} ({self.status})"
 
 class Person(models.Model):
     first_name = models.CharField("Имя", max_length=100)
@@ -125,17 +156,30 @@ class Person(models.Model):
         return f"{self.last_name} {self.first_name}"
 
 class ContentParticipation(models.Model):
+    ROLE_CHOICES = [
+        ('ACTOR', 'Актер'),
+        ('DIRECTOR', 'Режиссер'),
+        ('PRODUCER', 'Продюсер'),
+        ('WRITER', 'Сценарист'),
+        ('COMPOSER', 'Композитор'),
+        ('OTHER', 'Другое'),
+    ]
+    
     media_content = models.ForeignKey(MediaContent, verbose_name="Медиаконтент", on_delete=models.CASCADE)
     person = models.ForeignKey(Person, verbose_name="Персона", on_delete=models.CASCADE)
-    role = models.CharField("Роль", max_length=100)
-    role_name = models.CharField("Название роли", max_length=100)
+    role = models.CharField("Роль", max_length=20, choices=ROLE_CHOICES)
+    role_name = models.CharField("Название роли", max_length=100, null=True, blank=True)  # Изменение №7
 
     class Meta:
         verbose_name = "Участие в контенте"
         verbose_name_plural = "Участие в контенте"
 
+    def __str__(self):  # Изменение №1
+        return f"{self.person} - {self.media_content} ({self.role})"
+
 class Genre(models.Model):
     name = models.CharField("Название", max_length=100, unique=True)
+    description = models.TextField("Описание жанра", blank=True)  # Изменение №5
 
     class Meta:
         verbose_name = "Жанр"
@@ -147,8 +191,8 @@ class Genre(models.Model):
 class Season(models.Model):
     media_content = models.ForeignKey(MediaContent, verbose_name="Медиаконтент", on_delete=models.CASCADE)
     season_number = models.PositiveIntegerField("Номер сезона")
-    title = models.CharField("Название сезона", max_length=255)
-    description = models.TextField("Описание")
+    description = models.TextField("Описание", blank=True)
+    # Убрано поле title (Изменение №6)
 
     class Meta:
         verbose_name = "Сезон"
@@ -167,7 +211,7 @@ class Episode(models.Model):
     season = models.ForeignKey(Season, verbose_name="Сезон", on_delete=models.CASCADE)
     episode_number = models.PositiveIntegerField("Номер эпизода")
     title = models.CharField("Название", max_length=255)
-    description = models.TextField("Описание")
+    description = models.TextField("Описание", blank=True)
     duration = models.PositiveIntegerField("Длительность")
     release_date = models.DateField("Дата выхода эпизода")
 
@@ -182,4 +226,4 @@ class Episode(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.season} - Эпизод {self.episode_number}"
+        return f"{self.season} - Эпизод {self.episode_number}: {self.title}"
