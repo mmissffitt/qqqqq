@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEMAX - Онлайн кинотеатр</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <h1>CINEMAX</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="">Главная</a></li>
+                <li><a href="">Фильмы</a></li>
+                <li><a href="">Сериалы</a></li>
+                <li><a href="">Подписки</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn">Войти</button>
+                <button class="register-btn">Регистрация</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block main %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>CINEMAX</h3>
+                <p>Лучший онлайн-кинотеатр</p>
+            </div>
+            <div class="footer-section">
+                <h4>Разделы</h4>
+                <ul>
+                    <li><a href="">Главная</a></li>
+                    <li><a href="">Фильмы</a></li>
+                    <li><a href="">Сериалы</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <ul>
+                    <li><a href="#">Помощь</a></li>
+                    <li><a href="#">Обратная связь</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CINEMAX. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>
