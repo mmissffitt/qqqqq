@@ -1,4 +1,66 @@
 /* style.css */
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+/* Герой-секция с фоновым изображением */
+.hero {
+    background-size: cover;
+    background-position: center;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Карточки с изображениями */
+.card-image {
+    height: 350px;
+    background-color: var(--light-gray);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+/* Заглушка, если изображение не загрузилось */
+.card-image:before {
+    content: "No Image";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 1rem;
+}
+
+/* Адаптивность для изображений */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Стили для различных размеров изображений */
+.poster-small {
+    width: 200px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.poster-medium {
+    width: 300px;
+    height: 450px;
+    object-fit: cover;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 :root {
     --red: #ff0000;
     --dark-red: #cc0000;
@@ -452,4 +514,42 @@ main {
     .featured, .content-page, .subscriptions-page, .content-detail {
         margin: 2rem auto;
     }
+}
+
+/* Стили для страницы подписок */
+.payment-methods {
+    margin-top: 4rem;
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--gray);
+    border-radius: 8px;
+}
+
+.payment-methods h3 {
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.payment-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-icon {
+    font-size: 2rem;
+    background-color: var(--light-gray);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-methods p {
+    color: #ccc;
+    font-size: 0.9rem;
 }
