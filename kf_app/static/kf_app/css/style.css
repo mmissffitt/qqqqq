@@ -1,10 +1,8 @@
-/* style.css */
 .logo img {
     height: 40px;
     width: auto;
 }
 
-/* Герой-секция с фоновым изображением */
 .hero {
     background-size: cover;
     background-position: center;
@@ -15,7 +13,6 @@
     text-align: center;
 }
 
-/* Карточки с изображениями */
 .card-image {
     height: 350px;
     background-color: var(--light-gray);
@@ -24,24 +21,12 @@
     position: relative;
 }
 
-/* Заглушка, если изображение не загрузилось */
-.card-image:before {
-    content: "No Image";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-    font-size: 1rem;
-}
 
-/* Адаптивность для изображений */
 img {
     max-width: 100%;
     height: auto;
 }
 
-/* Стили для различных размеров изображений */
 .poster-small {
     width: 200px;
     height: 300px;
@@ -77,7 +62,6 @@ img {
     box-sizing: border-box;
 }
 
-/* Основные изменения для прикрепления футера */
 html, body {
     height: 100%;
 }
@@ -166,10 +150,7 @@ main {
     background-color: var(--dark-red);
 }
 
-/* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                url('{% static "images/hero-bg.jpg" %}') no-repeat center center;
     background-size: cover;
     height: 600px;
     display: flex;
@@ -205,7 +186,6 @@ main {
     background-color: var(--dark-red);
 }
 
-/* Content Sections */
 .featured, .content-page, .subscriptions-page, .content-detail {
     max-width: 1200px;
     margin: 4rem auto;
@@ -220,7 +200,6 @@ main {
     padding-left: 1rem;
 }
 
-/* Content Grid */
 .content-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -258,7 +237,6 @@ main {
     font-size: 0.9rem;
 }
 
-/* Content Detail Page */
 .content-header {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -353,7 +331,6 @@ main {
     font-size: 0.9rem;
 }
 
-/* Filters */
 .filters {
     display: flex;
     gap: 1rem;
@@ -368,7 +345,6 @@ main {
     border-radius: 4px;
 }
 
-/* Subscription Plans */
 .subscription-plans {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -516,7 +492,6 @@ main {
     }
 }
 
-/* Стили для страницы подписок */
 .payment-methods {
     margin-top: 4rem;
     text-align: center;

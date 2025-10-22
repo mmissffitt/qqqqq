@@ -2,7 +2,6 @@ from django.urls import path
 from .views import root
 from django.shortcuts import render
 
-# Добавьте временные view-функции для всех страниц
 def movies_view(request):
     return render(request, 'movies.html')
 

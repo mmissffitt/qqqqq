@@ -57,7 +57,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'kf_app' / 'templates',  # путь к вашим шаблонам
+            BASE_DIR / 'kf_app' / 'templates',  
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -122,7 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'kf_app' / 'static',  # путь к вашей папке static в приложении
+    BASE_DIR / 'kf_app' / 'static',  
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
